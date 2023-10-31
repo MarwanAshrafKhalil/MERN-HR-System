@@ -2,13 +2,10 @@ import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import express from "express";
 import mongoose from "mongoose";
+import CredentialsRoutes from "./routes/Credentials.route.js";
 import employeeRoutes from "./routes/Employee.route.js";
 import authRoutes from "./routes/auth.route.js";
-import CredentialsRoutes from "./routes/Credentials.route.js";
-
 dotenv.config();
-
-// console.log(process.env.MONGO);
 
 mongoose
   .connect(process.env.MONGO)
