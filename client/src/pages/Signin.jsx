@@ -1,6 +1,9 @@
+import { useNavigate } from "react-router";
 function Signin() {
+  const navigate = useNavigate();
   function handleSubmit(e) {
     e.preventDefault();
+    navigate("/punch");
   }
   return (
     <div className="p-3 max-w-lg mx-auto ">
