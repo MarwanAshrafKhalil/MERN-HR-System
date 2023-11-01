@@ -18,6 +18,7 @@ export const employeeSlice = createSlice({
     },
     fetchEmployee: (state, action) => {
       state.currentEmployee = action.payload;
+      state.error = "";
     },
     createEmployee: (state, action) => {
       state.createdEmployee = true;

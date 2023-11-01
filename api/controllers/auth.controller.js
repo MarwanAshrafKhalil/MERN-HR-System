@@ -36,7 +36,7 @@ export async function signin(req, res, next) {
     );
     if (!validPassword) return next(errorHandler(401, "Wrong credentials"));
     const token = jwt.sign({ id: validEmployee._id }, process.env.JWT_SECRET);
-    console.log("token: ", token);
+
     const { password: hashedPassword, ...rest } = validEmployee._doc;
     const expiryDate = new Date(Date.now() + 3600000);
     res

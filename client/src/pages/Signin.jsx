@@ -1,34 +1,36 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-// import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector, useStore } from "react-redux";
+import { signinEmployee } from "../redux/features/employee/employee.actions";
 
 export default function Signin() {
   const [formData, SetFormData] = useState({});
 
   const navigate = useNavigate();
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
+  const store = useStore();
+
+  const employeeFetch = useSelector((state) => state.employee.currentEmployee);
+  const employeeError = useSelector((state) => state.employee.error);
+
+  const [errorEmp, setErrorEmp] = useState("");
 
   function handleChange(e) {
     SetFormData({ ...formData, [e.target.id]: e.target.value });
   }
 
+  // function setError() {
+  //   setErrorEmp(employeeError);
+  // }
+
   async function handleSubmit(e) {
     e.preventDefault();
     console.log("formdata: ", formData);
     try {
-      const res = await fetch("api/auth/signin", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-      console.log("res: ", res);
-
-      const data = await res.json();
-      console.log("data: ", data);
-
-      if (data.success === false) {
+      await dispatch(signinEmployee(formData));
+      let employeeError = store.getState().employee.error;
+      console.log("Errr: ", employeeError);
+      if (employeeError) {
         return;
       }
       navigate("/punch");
@@ -37,6 +39,7 @@ export default function Signin() {
       console.log("failed: ", error);
     }
   }
+
   return (
     <div className="p-3 max-w-lg mx-auto ">
       <form
