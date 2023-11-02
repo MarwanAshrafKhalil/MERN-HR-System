@@ -10,7 +10,7 @@ function MainApp() {
       <Navbar />
       <Routes>
         <Route path="/profile" element={<Profile />} />
-        <Route path="/punch" element={<Punch />} />
+        {/* <Route path="/punch" element={<Punch />} /> */}
         <Route path="/leaves" element={<Leaves />} />
       </Routes>
     </div>
