@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router";
+import { Navigate, Route, Routes } from "react-router";
 import Navbar from "./Navbar";
 import Profile from "../pages/Profile";
 import Punch from "../pages/Punch";
@@ -12,6 +12,7 @@ function MainApp() {
         <Route path="/profile" element={<Profile />} />
         {/* <Route path="/punch" element={<Punch />} /> */}
         <Route path="/leaves" element={<Leaves />} />
+        <Route path="/*" element={<Navigate to="/signin" />} />
       </Routes>
     </div>
   );
