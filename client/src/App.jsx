@@ -12,20 +12,6 @@ function App() {
   console.log("print: ", isAuth);
 
   return (
-    // <BrowserRouter>
-    //   <Routes>
-    //     {/* to navigate to signin page as default page */}
-    //     {/* <Route path="/" element={<Navigate to="/signin" />} /> */}
-    //     {/* <Route path="/signin" element={<Signin />} />
-    //     <Route path="/punch" element={<Punch />} /> */}
-
-    //     <Route path="/" element={<PrivateRoute />}>
-    //       <Route path="/punch" element={<Punch />} />
-    //     </Route>
-    //     <Route path="/signin" element={<Signin />} />
-    //     {/* <Route path="/*" element={<MainApp />} /> */}
-    //   </Routes>
-    // </BrowserRouter>
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Navigate to="/signin" />} />
@@ -34,10 +20,6 @@ function App() {
           element={isAuth ? <Navigate to={"/punch"} /> : <Signin />}
         />
         <Route element={<PrivateRoute auth={isAuth} />}>
-          {/* <Route path="/profile" element={<Profile />} />
-          <Route path="/punch" element={<Punch />} />
-          <Route path="/leaves" element={<Leaves />} /> */}
-          <Route path="/punch" element={<Punch />} />
           <Route path="/*" element={isAuth && <MainApp />} />
         </Route>
       </Routes>
