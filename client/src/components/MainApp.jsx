@@ -12,7 +12,6 @@ function MainApp() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/punch" element={<Punch />} />
         <Route path="/leaves" element={<Leaves />} />
-        <Route />
       </Routes>
     </div>
   );

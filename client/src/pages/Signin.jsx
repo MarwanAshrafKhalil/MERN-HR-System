@@ -56,10 +56,6 @@ export default function Signin() {
         <div className="mt-10 bg-white sm:mx-auto sm:w-full sm:max-w-sm p-4 shadow-lg rounded-lg">
           <form onSubmit={handleSubmit} className="space-y-6 " type="submit">
             <div>
-              <h1 className="text-white font-semibold text-2xl uppercase">
-                Sign In
-              </h1>
-
               <label
                 htmlFor="username"
                 className="block text-sm font-medium leading-6 text-gray-900"

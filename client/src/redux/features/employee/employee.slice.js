@@ -6,6 +6,7 @@ const initialState = {
   updatedEmployee: {},
   deletedEmployee: false,
   isLoading: false,
+  signedIn: false,
   error: "",
 };
 
@@ -19,6 +20,7 @@ export const employeeSlice = createSlice({
     fetchEmployee: (state, action) => {
       state.currentEmployee = action.payload;
       state.error = "";
+      state.signedIn = true;
     },
     createEmployee: (state, action) => {
       state.createdEmployee = true;
