@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import CredentialsRoutes from "./routes/Credentials.route.js";
 import employeeRoutes from "./routes/Employee.route.js";
 import authRoutes from "./routes/auth.route.js";
+import punchRoutes from "./routes/punch.route.js";
 dotenv.config();
 
 mongoose
@@ -28,6 +29,7 @@ app.listen(3000, () => {
 app.use("/api/employee", employeeRoutes);
 app.use("/api/credentials", CredentialsRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/punch", punchRoutes);
 
 app.use((err, req, res, next) => {
   const statusCode = err.statusCode || 500;
