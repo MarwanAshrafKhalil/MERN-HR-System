@@ -6,7 +6,7 @@ const punchSchema = new mongoose.Schema({
     {
       date: { type: Date, required: true },
       punchIn: { type: String, required: true },
-      punchOut: { type: String, required: true },
+      punchOut: { type: String },
     },
   ],
 });

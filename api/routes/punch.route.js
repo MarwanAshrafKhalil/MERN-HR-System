@@ -1,9 +1,10 @@
 import express from "express";
-import { punchIn } from "../controllers/Punch.controller.js";
+import { punchIn, punchOut } from "../controllers/Punch.controller.js";
 
 const router = express.Router();
 
 // router.get("/", test);
 router.post("/punchin", punchIn);
+router.post("/punchout", punchOut);
 
 export default router;
