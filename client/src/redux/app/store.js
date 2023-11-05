@@ -2,10 +2,11 @@ import { combineReducers, configureStore } from "@reduxjs/toolkit";
 import employeeReducer from "../features/employee/employee.slice";
 import { persistReducer, persistStore } from "redux-persist";
 import storage from "redux-persist/lib/storage";
+
 const persistCofnig = {
   key: "root",
-
   storage,
+  version: 2,
 };
 
 const rootReducer = combineReducers({ employee: employeeReducer });
