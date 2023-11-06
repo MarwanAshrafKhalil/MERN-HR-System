@@ -1,31 +1,23 @@
 import Punch from "../models/Punch.model.js";
+import { errorHandler } from "../utils/error.js";
 
 export async function punchIn(req, res, next) {
   try {
     const { employeeId, punchIn, punchOut } = req.body;
     //   console.log(employeeId, punchIn, punchOut);
+    const datePunch = new Date();
 
     const attendance = {
-      date: new Date(),
+      date: datePunch,
       punchIn,
     };
 
     let existingPunch = await Punch.findOne({ employeeId });
-    // console.log(existingPunch);
 
     if (existingPunch) {
-      // If an existing punch record is found, update the punch-in and punch-out fields
-      //   existingPunch.attendance.punchIn = punchIn;
-      //   existingPunch.attendance.punchOut = punchOut;
-
-      //   existingPunch.attendance.put({ punchIn: punchIn, punchOut: punchOut });
-
-      //   existingPunch.attendance.punchIn = punchIn;
-      //   existingPunch.attendance.punchOut = punchOut;
       existingPunch.attendance.push(attendance);
-      console.log(existingPunch);
     } else {
-      const existingPunch = new Punch({
+      existingPunch = new Punch({
         employeeId,
         attendance: [attendance],
       });
@@ -37,10 +29,10 @@ export async function punchIn(req, res, next) {
         res.status(201).json({ message: "Employee created successfully." });
       })
       .catch((error) => {
-        console.log(error);
+        next(errorHandler("401", "cant save punchIn" + error));
       });
   } catch (error) {
-    // console.log(error.message);
+    next(error);
   }
 }
 
@@ -56,8 +48,8 @@ export async function punchOut(req, res, next) {
     const plainObject = existingPunch.attendance[0].toObject();
     const attendanceObjID = plainObject._id.toString();
 
-    console.log("1: ", plainObject);
-    console.log(plainObject.punchIn);
+    // console.log("1: ", plainObject);
+    // console.log(plainObject.punchIn);
     // console.log(plainObject._id.toString());
     // console.log("Plain-keys: ", Object.keys(plainObject));
     // console.log("punchInObj-keys: ", Object.keys(punchInObj));
@@ -66,21 +58,9 @@ export async function punchOut(req, res, next) {
     const outFlag = Object.keys(plainObject).includes("punchOut");
 
     if (plainObject.punchIn && outFlag === false) {
-      // const attendance ={
-      //   punchOut
-      // }
-      console.log("inside");
-
-      const newPunchInObj = { ...plainObject, punchOut: punchOut };
-      console.log("final: ", newPunchInObj);
-
-      const punchId = employeeId; // Replace with the actual document ID
-      const attendanceIndex = -1; // Index of the third object in the attendance array (zero-based)
-
-      console.log("id: ", punchId, " attIndex: ", attendanceIndex);
       try {
         const result = await Punch.updateOne(
-          { employeeId: punchId, "attendance._id": attendanceObjID },
+          { employeeId, "attendance._id": attendanceObjID },
           {
             $set: {
               [`attendance.$.punchOut`]: punchOut,
@@ -88,56 +68,14 @@ export async function punchOut(req, res, next) {
           }
         );
 
-        res.status(200).json(result._doc);
+        res.status(200).json("punch Out successfully");
       } catch (error) {
-        console.log(error);
+        next(errorHandler(401, "Cant update attendance sheet"));
       }
-
-      // const updatePunch = await Punch.findByIdAndUpdate(
-      //   employeeId,
-      //   {
-      //     $set: newPunchInObj,
-      //   },
-      //   { new: true }
-      // );
-
-      // await existingPunch
-      // .save()
-      // .then(() => {
-      //   console.log("Punch record saved successfully");
-      //   res.status(201).json({ message: "Employee created successfully." });
-      // })
-      // .catch((error) => {
-      //   console.log(error);
-      // });
+    } else {
+      return next(errorHandler(401, "Database error-punchOut already exists"));
     }
-
-    // if (existingPunch) {
-    //   // If an existing punch record is found, update the punch-in and punch-out fields
-    //   //   existingPunch.attendance.punchIn = punchIn;
-    //   //   existingPunch.attendance.punchOut = punchOut;
-
-    //   //   existingPunch.attendance.put({ punchIn: punchIn, punchOut: punchOut });
-
-    //   //   existingPunch.attendance.punchIn = punchIn;
-    //   //   existingPunch.attendance.punchOut = punchOut;
-    //   existingPunch.attendance.push(attendance);
-    // } else {
-    //   const existingPunch = new Punch({
-    //     employeeId,
-    //     attendance: [attendance],
-    //   });
-    // }
-    // await existingPunch
-    //   .save()
-    //   .then(() => {
-    //     console.log("Punch record saved successfully");
-    //     res.status(201).json({ message: "Employee created successfully." });
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
   } catch (error) {
-    // console.log(error.message);
+    next(error);
   }
 }
