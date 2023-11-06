@@ -3,8 +3,7 @@ import { errorHandler } from "../utils/error.js";
 
 export async function punchIn(req, res, next) {
   try {
-    const { employeeId, punchIn, punchOut } = req.body;
-    //   console.log(employeeId, punchIn, punchOut);
+    const { employeeId, punchIn } = req.body;
     const datePunch = new Date();
 
     const attendance = {
@@ -16,6 +15,7 @@ export async function punchIn(req, res, next) {
 
     if (existingPunch) {
       existingPunch.attendance.push(attendance);
+      console.log(existingPunch);
     } else {
       existingPunch = new Punch({
         employeeId,
@@ -29,7 +29,7 @@ export async function punchIn(req, res, next) {
         res.status(201).json({ message: "Employee created successfully." });
       })
       .catch((error) => {
-        next(errorHandler("401", "cant save punchIn" + error));
+        next(errorHandler("401", "cant save punchIn " + error));
       });
   } catch (error) {
     next(error);
@@ -74,6 +74,32 @@ export async function punchOut(req, res, next) {
       }
     } else {
       return next(errorHandler(401, "Database error-punchOut already exists"));
+    }
+  } catch (error) {
+    next(error);
+  }
+}
+
+export async function punchGet(req, res, next) {
+  try {
+    const { employeeId } = req.body;
+
+    let existingPunch = await Punch.findOne(
+      { employeeId },
+      { attendance: { $slice: -1 } }
+    );
+
+    if (existingPunch) {
+      const plainObject = existingPunch.attendance[0].toObject();
+      const inFlag = Object.keys(plainObject).includes("punchIn");
+
+      if (inFlag) {
+        return res.json(plainObject.punchIn);
+      } else {
+        return res.json(false);
+      }
+    } else {
+      return res.json(false);
     }
   } catch (error) {
     next(error);
