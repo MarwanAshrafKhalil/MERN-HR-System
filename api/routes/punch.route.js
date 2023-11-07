@@ -10,6 +10,6 @@ const router = express.Router();
 // router.get("/", test);
 router.post("/punchin", punchIn);
 router.post("/punchout", punchOut);
-router.post("/punchget", punchGet);
+router.post("/", punchGet);
 
 export default router;

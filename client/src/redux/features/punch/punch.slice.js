@@ -6,6 +6,7 @@ const initialState = {
   punchOutState: false,
   punchListExist: false,
   isLoading: false,
+  error: "",
 };
 
 export const punchSlice = createSlice({
@@ -18,5 +19,22 @@ export const punchSlice = createSlice({
     closeLoader: (state) => {
       state.isLoading = false;
     },
+    fetchPunch: (state, action) => {
+      state.punchIn = action.payload;
+      state.error = "";
+    },
+    setPunchIn: (state, action) => {
+      state.punchInState = true;
+      state.error = "";
+    },
+    setPunchOut: (state, action) => {
+      state.punchOutState = true;
+      state.error = "";
+    },
+    catchError: (state, action) => {
+      state.error = action.payload;
+    },
   },
 });
+
+export default punchSlice.reducer;

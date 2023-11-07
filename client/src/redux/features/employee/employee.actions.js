@@ -10,9 +10,11 @@ export const signinEmployee = (data) => async (dispatch) => {
     const response = await requestFromServer.getEmployee(data);
     const responseData = await response.json();
     console.log("response: ", responseData);
-    if (responseData.success == false) {
+    if (responseData.success === false) {
       dispatch(employeeActions.catchError(responseData));
     } else dispatch(employeeActions.fetchEmployee(responseData));
+  } catch (error) {
+    dispatch(employeeActions.catchError(error));
   } finally {
     dispatch(employeeActions.closeLoader());
   }
