@@ -11,17 +11,25 @@ export default function Punch() {
   const dispatch = useDispatch();
   const store = useStore();
 
-  const { username: employeeUsername, _id: employeeID } = useSelector(
+  const { username: employeeUsername, _id: employeeId } = useSelector(
     (state) => state.employee.currentEmployee
   );
 
-  console.log(employeeUsername, employeeID);
+  const {
+    punchIn: punchInTime,
+    punchOut: punchOutTime,
+    punchInstate,
+    punchOutState,
+  } = useSelector((state) => state.punch);
+  console.log(employeeUsername, employeeId);
   const employeeError = useSelector((state) => state.employee.error);
 
   const [errorEmp, setErrorEmp] = useState("");
+  const [punchIn, setPunchIn] = useState("");
 
   useEffect(() => {
-    dispatch(fetchPunchEmp(employeeID));
+    const res = dispatch(fetchPunchEmp(employeeId));
+    setPunchIn(res);
   }, []);
 
   function handleChange(e) {
@@ -71,30 +79,38 @@ export default function Punch() {
               </p>
             </div>
 
-            <div className="p-2">
-              <label className="block text-lg font-medium pt-4 leading-6 text-gray-900">
-                Pucnh In:
-              </label>
+            {punchIn ? (
+              <div className="p-2">
+                <label className="block text-lg font-medium pt-4 leading-6 text-gray-900">
+                  Pucnh In:
+                </label>
 
-              <p className=" font-md font-semibold text-center shadow-md rounded-md p-4">
-                6-11-2023 01:30PM
-              </p>
-            </div>
+                <p className=" font-md font-semibold text-center shadow-md rounded-md p-4">
+                  {punchInTime}
+                </p>
+              </div>
+            ) : (
+              ""
+            )}
 
-            <div className="p-2">
-              <label className="block text-lg font-medium pt-4 leading-6 text-gray-900">
-                Pucnh Out:
-              </label>
+            {punchOutTime ? (
+              <div className="p-2">
+                <label className="block text-lg font-medium pt-4 leading-6 text-gray-900">
+                  Pucnh Out:
+                </label>
 
-              <p className=" font-md font-semibold text-center shadow-md rounded-md p-4">
-                6-11-2023 09:30PM
-              </p>
-            </div>
+                <p className=" font-md font-semibold text-center shadow-md rounded-md p-4">
+                  {punchOutTime}
+                </p>
+              </div>
+            ) : (
+              ""
+            )}
           </div>
 
           <div className="flex flex-col gap-2 pt-6">
             <button className="flex w-full justify-center rounded-md bg-slate-600  py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-              Punch In
+              {punchOutState ? "Punch In" : "Punch Out"}
             </button>
           </div>
         </div>

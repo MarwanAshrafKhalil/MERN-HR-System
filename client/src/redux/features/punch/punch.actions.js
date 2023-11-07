@@ -6,17 +6,20 @@ const { actions: punchActions } = punchSlice;
 export const fetchPunchEmp = (data) => async (dispatch) => {
   dispatch(punchActions.openLoader());
   try {
-    console.log("ins-actions:", data);
-
     const response = await requestFromServer.getPunch({ data });
-    console.log("hi:  ", response);
     const responseData = await response.json();
-
-    console.log(responseData);
     if (responseData.success === false) {
       dispatch(punchActions.catchError(responseData));
     } else {
-      dispatch(punchActions.fetchPunch(responseData));
+      if (
+        Object.keys(responseData).includes("punchInTime") &&
+        Object.keys(responseData).includes("punchOutTime")
+      ) {
+        // console.log("exception case: ", responseData);
+        dispatch(punchActions.fetchPunches(responseData));
+      } else if (Object.keys(responseData).includes("punchInTime")) {
+        dispatch(punchActions.fetchPunchIn(responseData));
+      }
     }
   } catch (error) {
     dispatch(punchActions.catchError(error));

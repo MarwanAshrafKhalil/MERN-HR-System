@@ -26,7 +26,7 @@ export async function punchIn(req, res, next) {
       .save()
       .then(() => {
         console.log("Punch record saved successfully");
-        res.status(201).json({ message: "Employee created successfully." });
+        res.status(201).json(punchIn);
       })
       .catch((error) => {
         next(errorHandler("401", "cant save punchIn " + error));
@@ -68,7 +68,7 @@ export async function punchOut(req, res, next) {
           }
         );
 
-        res.status(200).json("punch Out successfully");
+        res.status(200).json(punchOut);
       } catch (error) {
         next(errorHandler(401, "Cant update attendance sheet"));
       }
@@ -99,9 +99,17 @@ export async function punchGet(req, res, next) {
     if (existingPunch) {
       const plainObject = existingPunch.attendance[0].toObject();
       const inFlag = Object.keys(plainObject).includes("punchIn");
+      const outFlag = Object.keys(plainObject).includes("punchOut");
 
-      if (inFlag) {
+      if (inFlag && !outFlag) {
         return res.json(plainObject.punchIn);
+      } else if (inFlag && outFlag) {
+        const punches = {
+          punchInTime: plainObject.punchIn,
+          punchOutTime: plainObject.punchOut,
+        };
+
+        return res.json(punches);
       } else {
         return res.json(false);
       }
