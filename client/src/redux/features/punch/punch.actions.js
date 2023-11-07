@@ -6,8 +6,13 @@ const { actions: punchActions } = punchSlice;
 export const fetchPunchEmp = (data) => async (dispatch) => {
   dispatch(punchActions.openLoader());
   try {
-    const response = await requestFromServer.getPunch(data);
+    console.log("ins-actions:", data);
+
+    const response = await requestFromServer.getPunch({ data });
+    console.log("hi:  ", response);
     const responseData = await response.json();
+
+    console.log(responseData);
     if (responseData.success === false) {
       dispatch(punchActions.catchError(responseData));
     } else {

@@ -81,13 +81,20 @@ export async function punchOut(req, res, next) {
 }
 
 export async function punchGet(req, res, next) {
+  console.log("punchget: ");
+
   try {
-    const { employeeId } = req.body;
+    const { data: employeeId } = req.body;
+    console.log("punchget:", req.body);
+
+    console.log("punchget:", employeeId);
 
     let existingPunch = await Punch.findOne(
       { employeeId },
       { attendance: { $slice: -1 } }
     );
+
+    console.log("existing: ", existingPunch);
 
     if (existingPunch) {
       const plainObject = existingPunch.attendance[0].toObject();

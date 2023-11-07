@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector, useStore } from "react-redux";
 import { signinEmployee } from "../redux/features/employee/employee.actions";
+import { fetchPunchEmp } from "../redux/features/punch/punch.actions";
 
 export default function Punch() {
   const [formData, SetFormData] = useState({});
@@ -10,12 +11,18 @@ export default function Punch() {
   const dispatch = useDispatch();
   const store = useStore();
 
-  const employeeUsername = useSelector(
-    (state) => state.employee.currentEmployee.username
+  const { username: employeeUsername, _id: employeeID } = useSelector(
+    (state) => state.employee.currentEmployee
   );
+
+  console.log(employeeUsername, employeeID);
   const employeeError = useSelector((state) => state.employee.error);
 
   const [errorEmp, setErrorEmp] = useState("");
+
+  useEffect(() => {
+    dispatch(fetchPunchEmp(employeeID));
+  }, []);
 
   function handleChange(e) {
     SetFormData({ ...formData, [e.target.id]: e.target.value });
