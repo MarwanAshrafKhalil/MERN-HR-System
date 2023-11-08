@@ -23,6 +23,7 @@ export const punchSlice = createSlice({
     fetchPunchIn: (state, action) => {
       state.punchIn = action.payload;
       state.punchInState = true;
+      state.punchListExist = true;
       state.error = "";
     },
     fetchPunches: (state, action) => {
@@ -30,10 +31,17 @@ export const punchSlice = createSlice({
       state.punchOut = action.payload.punchOutTime;
       state.punchInState = true;
       state.punchOutState = true;
+      state.punchListExist = true;
+
       state.error = "";
     },
+    fetchNewPunch: (state, action) => {
+      state.punchListExist = false;
+    },
     setPunchIn: (state, action) => {
+      state.punchIn = action.payload;
       state.punchInState = true;
+      state.punchListExist = true;
       state.error = "";
     },
     setPunchOut: (state, action) => {

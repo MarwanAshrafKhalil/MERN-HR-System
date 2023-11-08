@@ -1,15 +1,19 @@
+import moment from "moment";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector, useStore } from "react-redux";
-import { signinEmployee } from "../redux/features/employee/employee.actions";
-import { fetchPunchEmp } from "../redux/features/punch/punch.actions";
+import { useNavigate } from "react-router-dom";
+
+import {
+  fetchPunchEmp,
+  punchInEmp,
+  punchOutEmp,
+} from "../redux/features/punch/punch.actions";
 
 export default function Punch() {
-  const [formData, SetFormData] = useState({});
-
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const store = useStore();
+  const [punchIn, setPunchIn] = useState("");
 
   const { username: employeeUsername, _id: employeeId } = useSelector(
     (state) => state.employee.currentEmployee
@@ -18,23 +22,18 @@ export default function Punch() {
   const {
     punchIn: punchInTime,
     punchOut: punchOutTime,
-    punchInstate,
+    punchInState,
     punchOutState,
+    punchListExist,
   } = useSelector((state) => state.punch);
-  console.log(employeeUsername, employeeId);
-  const employeeError = useSelector((state) => state.employee.error);
-
-  const [errorEmp, setErrorEmp] = useState("");
-  const [punchIn, setPunchIn] = useState("");
 
   useEffect(() => {
-    const res = dispatch(fetchPunchEmp(employeeId));
-    setPunchIn(res);
+    try {
+      dispatch(fetchPunchEmp(employeeId));
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
-
-  function handleChange(e) {
-    SetFormData({ ...formData, [e.target.id]: e.target.value });
-  }
 
   // function setError() {
   //   setErrorEmp(employeeError);
@@ -42,15 +41,24 @@ export default function Punch() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    console.log("formdata: ", formData);
+    console.log("in");
+
     try {
-      await dispatch(signinEmployee(formData));
-      let employeeError = store.getState().employee.error;
-      console.log("Errr: ", employeeError);
-      if (employeeError) {
-        return;
+      if (punchOutState || !punchListExist) {
+        console.log("first");
+        const punchInT = new Date();
+        const punchInTrig = moment(punchInT).format("MMMM Do YYYY, h:mm:ss a");
+
+        const punchData = { employeeId, punchInTrig };
+        console.log("PunchData: ", punchData);
+        await dispatch(punchInEmp(punchData));
+      } else if (punchInState && !punchOutState) {
+        console.log("second");
+
+        const punchOutTrig = new Date();
+        const punchData = { employeeId, punchOutTrig };
+        dispatch(punchOutEmp(punchData));
       }
-      navigate("/punch");
     } catch (error) {
       // dispatch();
       console.log("failed: ", error);
@@ -79,7 +87,7 @@ export default function Punch() {
               </p>
             </div>
 
-            {punchIn ? (
+            {punchInTime && (
               <div className="p-2">
                 <label className="block text-lg font-medium pt-4 leading-6 text-gray-900">
                   Pucnh In:
@@ -89,11 +97,9 @@ export default function Punch() {
                   {punchInTime}
                 </p>
               </div>
-            ) : (
-              ""
             )}
 
-            {punchOutTime ? (
+            {punchOutTime && (
               <div className="p-2">
                 <label className="block text-lg font-medium pt-4 leading-6 text-gray-900">
                   Pucnh Out:
@@ -103,14 +109,15 @@ export default function Punch() {
                   {punchOutTime}
                 </p>
               </div>
-            ) : (
-              ""
             )}
           </div>
 
           <div className="flex flex-col gap-2 pt-6">
-            <button className="flex w-full justify-center rounded-md bg-slate-600  py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-              {punchOutState ? "Punch In" : "Punch Out"}
+            <button
+              onClick={(e) => handleSubmit(e)}
+              className="flex w-full justify-center rounded-md bg-slate-600  py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
+              {punchInState ? "Punch Out" : "Punch In"}
             </button>
           </div>
         </div>

@@ -8,6 +8,7 @@ export const fetchPunchEmp = (data) => async (dispatch) => {
   try {
     const response = await requestFromServer.getPunch({ data });
     const responseData = await response.json();
+    console.log("22#: ", responseData);
     if (responseData.success === false) {
       dispatch(punchActions.catchError(responseData));
     } else {
@@ -15,10 +16,11 @@ export const fetchPunchEmp = (data) => async (dispatch) => {
         Object.keys(responseData).includes("punchInTime") &&
         Object.keys(responseData).includes("punchOutTime")
       ) {
-        // console.log("exception case: ", responseData);
         dispatch(punchActions.fetchPunches(responseData));
       } else if (Object.keys(responseData).includes("punchInTime")) {
         dispatch(punchActions.fetchPunchIn(responseData));
+      } else {
+        dispatch(punchActions.fetchNewPunch());
       }
     }
   } catch (error) {

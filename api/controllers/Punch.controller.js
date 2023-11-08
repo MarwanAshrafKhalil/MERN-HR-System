@@ -3,7 +3,8 @@ import { errorHandler } from "../utils/error.js";
 
 export async function punchIn(req, res, next) {
   try {
-    const { employeeId, punchIn } = req.body;
+    const { employeeId, punchInTrig: punchIn } = req.body;
+    console.log("finaaal: ", employeeId, punchIn);
     const datePunch = new Date();
 
     const attendance = {
@@ -12,6 +13,7 @@ export async function punchIn(req, res, next) {
     };
 
     let existingPunch = await Punch.findOne({ employeeId });
+    console.log("1# ", existingPunch);
 
     if (existingPunch) {
       existingPunch.attendance.push(attendance);
@@ -81,13 +83,11 @@ export async function punchOut(req, res, next) {
 }
 
 export async function punchGet(req, res, next) {
-  console.log("punchget: ");
-
   try {
     const { data: employeeId } = req.body;
-    console.log("punchget:", req.body);
+    // console.log("punchget:", req.body);
 
-    console.log("punchget:", employeeId);
+    // console.log("punchget:", employeeId);
 
     let existingPunch = await Punch.findOne(
       { employeeId },
