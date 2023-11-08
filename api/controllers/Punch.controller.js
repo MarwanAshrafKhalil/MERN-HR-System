@@ -40,7 +40,7 @@ export async function punchIn(req, res, next) {
 
 export async function punchOut(req, res, next) {
   try {
-    const { employeeId, punchOut } = req.body;
+    const { employeeId, punchOutTrig: punchOut } = req.body;
 
     let existingPunch = await Punch.findOne(
       { employeeId },
@@ -100,13 +100,14 @@ export async function punchGet(req, res, next) {
       const plainObject = existingPunch.attendance[0].toObject();
       const inFlag = Object.keys(plainObject).includes("punchIn");
       const outFlag = Object.keys(plainObject).includes("punchOut");
+      console.log("Ret: ", plainObject);
 
       if (inFlag && !outFlag) {
-        return res.json(plainObject.punchIn);
+        return res.json(plainObject);
       } else if (inFlag && outFlag) {
         const punches = {
-          punchInTime: plainObject.punchIn,
-          punchOutTime: plainObject.punchOut,
+          punchIn: plainObject.punchIn,
+          punchOut: plainObject.punchOut,
         };
 
         return res.json(punches);

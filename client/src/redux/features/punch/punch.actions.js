@@ -13,11 +13,11 @@ export const fetchPunchEmp = (data) => async (dispatch) => {
       dispatch(punchActions.catchError(responseData));
     } else {
       if (
-        Object.keys(responseData).includes("punchInTime") &&
-        Object.keys(responseData).includes("punchOutTime")
+        Object.keys(responseData).includes("punchIn") &&
+        Object.keys(responseData).includes("punchOut")
       ) {
         dispatch(punchActions.fetchPunches(responseData));
-      } else if (Object.keys(responseData).includes("punchInTime")) {
+      } else if (Object.keys(responseData).includes("punchIn")) {
         dispatch(punchActions.fetchPunchIn(responseData));
       } else {
         dispatch(punchActions.fetchNewPunch());

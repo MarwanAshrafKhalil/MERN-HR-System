@@ -10,10 +10,7 @@ import {
 } from "../redux/features/punch/punch.actions";
 
 export default function Punch() {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const store = useStore();
-  const [punchIn, setPunchIn] = useState("");
 
   const { username: employeeUsername, _id: employeeId } = useSelector(
     (state) => state.employee.currentEmployee
@@ -55,7 +52,11 @@ export default function Punch() {
       } else if (punchInState && !punchOutState) {
         console.log("second");
 
-        const punchOutTrig = new Date();
+        const punchOutT = new Date();
+        const punchOutTrig = moment(punchOutT).format(
+          "MMMM Do YYYY, h:mm:ss a"
+        );
+
         const punchData = { employeeId, punchOutTrig };
         dispatch(punchOutEmp(punchData));
       }
@@ -68,11 +69,7 @@ export default function Punch() {
   return (
     <>
       <div className="bg-slate-100 mt-6  h-screen flex  min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-        <div className="sm:mx-auto sm:w-full max-w-2xl sm:max-w-lg">
-          <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-            {/* Punch In */}
-          </h2>
-        </div>
+        <div className="sm:mx-auto sm:w-full max-w-2xl sm:max-w-lg"></div>
         <div
           id="box"
           className="mt-10 bg-white sm:mx-auto sm:w-full  sm:max-w-xl p-4 shadow-lg rounded-lg"
