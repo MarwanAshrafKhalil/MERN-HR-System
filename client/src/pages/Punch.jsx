@@ -8,6 +8,7 @@ import {
   punchInEmp,
   punchOutEmp,
 } from "../redux/features/punch/punch.actions";
+import { signinEmployee } from "../redux/features/employee/employee.actions";
 
 export default function Punch() {
   const dispatch = useDispatch();
@@ -38,19 +39,19 @@ export default function Punch() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    console.log("in");
+    // console.log("in");
 
     try {
       if (punchOutState || !punchListExist) {
-        console.log("first");
+        // console.log("first");
         const punchInT = new Date();
         const punchInTrig = moment(punchInT).format("MMMM Do YYYY, h:mm:ss a");
 
         const punchData = { employeeId, punchInTrig };
-        console.log("PunchData: ", punchData);
+        // console.log("PunchData: ", punchData);
         await dispatch(punchInEmp(punchData));
       } else if (punchInState && !punchOutState) {
-        console.log("second");
+        // console.log("second");
 
         const punchOutT = new Date();
         const punchOutTrig = moment(punchOutT).format(
@@ -68,7 +69,10 @@ export default function Punch() {
 
   return (
     <>
-      <div className="bg-slate-100 mt-6  h-screen flex  min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
+      <div
+        id="punch-page"
+        className="bg-slate-100   h-screen flex  min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8"
+      >
         <div className="sm:mx-auto sm:w-full max-w-2xl sm:max-w-lg"></div>
         <div
           id="box"

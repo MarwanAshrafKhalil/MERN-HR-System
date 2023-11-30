@@ -1,6 +1,6 @@
 export async function getPunch(data) {
   try {
-    console.log("getPunch:", data);
+    // console.log("getPunch:", data);
     return await fetch("/api/punch/", {
       method: "POST",
       headers: {
@@ -14,8 +14,8 @@ export async function getPunch(data) {
 }
 
 export async function punchInReq(data) {
-  console.log("hiiiii");
-  console.log("data-punchinReq: ", { ...data });
+  // console.log("hiiiii");
+  // console.log("data-punchinReq: ", { ...data });
   return await fetch("/api/punch/punchin", {
     method: "POST",
     headers: {

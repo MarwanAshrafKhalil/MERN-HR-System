@@ -8,6 +8,7 @@ const persistCofnig = {
   key: "root",
   storage,
   version: 2,
+  whitelist: [],
 };
 
 const rootReducer = combineReducers({

@@ -18,7 +18,8 @@ const employeeSchema = new mongoose.Schema(
     },
     profilePicture: {
       type: String,
-      default: "",
+      default:
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSul6UHrgaDBa_IXE8rxAIhi4CjTNhFOslSCwAQBmI&s",
     },
   },
   { timestamps: true }

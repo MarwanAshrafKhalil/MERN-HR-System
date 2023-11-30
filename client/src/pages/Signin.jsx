@@ -25,11 +25,11 @@ export default function Signin() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-    console.log("formdata: ", formData);
+    // console.log("formdata: ", formData);
     try {
-      await dispatch(signinEmployee(formData));
+      dispatch(signinEmployee(formData));
       let employeeError = store.getState().employee.error;
-      console.log("Errr: ", employeeError);
+      // console.log("Errr: ", employeeError);
       if (employeeError) {
         return;
       }

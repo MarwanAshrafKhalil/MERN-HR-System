@@ -9,7 +9,7 @@ import MainApp from "./components/MainApp";
 
 function App() {
   const isAuth = useSelector((state) => state.employee.signedIn);
-  console.log("print: ", isAuth);
+  // console.log("print: ", isAuth);
 
   return (
     <BrowserRouter>

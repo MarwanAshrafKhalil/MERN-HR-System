@@ -8,7 +8,7 @@ export const fetchPunchEmp = (data) => async (dispatch) => {
   try {
     const response = await requestFromServer.getPunch({ data });
     const responseData = await response.json();
-    console.log("22#: ", responseData);
+    // console.log("22#: ", responseData);
     if (responseData.success === false) {
       dispatch(punchActions.catchError(responseData));
     } else {
