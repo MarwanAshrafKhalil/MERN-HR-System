@@ -1,3 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+h1 {
+  @apply text-gray-800 py-2 text-xl mb-2 font-bold;
+}
+.inputData {
+  @apply w-full bg-slate-100 rounded-lg flex-1 max-w-lg h-8;
+}
+
+.formLine {
+  @apply flex items-center space-x-4;
+}
+
+.formLabel {
+  @apply mr-4 block text-lg font-medium w-24 text-gray-900;
+}
