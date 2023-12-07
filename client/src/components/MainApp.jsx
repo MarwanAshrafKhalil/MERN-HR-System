@@ -3,6 +3,7 @@ import Navbar from "./Navbar";
 import Profile from "../pages/Profile";
 import Punch from "../pages/Punch";
 import Leaves from "../pages/Leaves";
+import Test from "../pages/Test";
 
 function MainApp() {
   return (
@@ -13,6 +14,7 @@ function MainApp() {
         <Route path="/punch" element={<Punch />} />
 
         <Route path="/leaves" element={<Leaves />} />
+        <Route path="/test" element={<Test />} />
         <Route path="/*" element={<Navigate to="/signin" />} />
       </Routes>
     </div>

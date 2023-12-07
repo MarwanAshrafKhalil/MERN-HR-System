@@ -28,6 +28,10 @@ function Navbar() {
             <li>Punch</li>
           </Link>
 
+          <Link to="/test">
+            <li>Test</li>
+          </Link>
+
           <Link to="/profile">
             <img
               src={profPic}
