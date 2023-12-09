@@ -92,40 +92,6 @@ export async function getLeave(req, res, next) {
     } else {
       return res.json(false);
     }
-    // if (dataType === "Pending") {
-    //   let existingLeave = await Leave.find({
-    //     "leaves.status": "Pending",
-    //   }).populate(populateOptions);
-
-    //   if (existingLeave && existingLeave.length > 0) {
-    //     const pendingLeaves = existingLeave.map((doc) => {
-    //       return {
-    //         username: doc.employeeId.username,
-    //         email: doc.employeeId.email,
-    //         leaves: doc.leaves.filter((leave) => leave.status === "Pending"),
-    //       };
-    //     });
-    //     return res.json(pendingLeaves);
-    //   } else {
-    //     return res.json(false);
-    //   }
-    // } else if (dataType === "All") {
-    //   let existingLeave = await Leave.find({}).populate(populateOptions);
-    //   if (existingLeave) {
-    //     return res.json(existingLeave);
-    //   } else {
-    //     return res.json(false);
-    //   }
-    // } else if (dataType === "Specific") {
-    //   let exisitingLeave = await Leave.findOne({ employeeId }).populate(
-    //     populateOptions
-    //   );
-    //   if (exisitingLeave) {
-    //     return res.json(exisitingLeave);
-    //   } else {
-    //     return res.json(false);
-    //   }
-    // }
   } catch (error) {
     next(error);
   }
