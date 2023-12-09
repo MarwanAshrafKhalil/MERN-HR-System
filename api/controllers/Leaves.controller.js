@@ -55,19 +55,77 @@ export async function applyLeave(req, res, next) {
 
 export async function getLeave(req, res, next) {
   try {
-    const { employeeId } = req.body;
+    const { employeeId, dataType } = req.body;
+    let populateOptions = {
+      path: "employeeId",
+      select: "username email",
+    };
 
-    let existingLeave = await Leave.findOne(
-      { employeeId }
-      // { leaves: { $slice: -1 } }
-    );
+    let query = {};
+    if (dataType === "Pending") {
+      query = { "leaves.status": "Pending" };
+    } else if (dataType === "Specific") {
+      query = { employeeId };
+    } else if (dataType === "All") {
+      query = {};
+    }
+
+    let existingLeave = await Leave.find(query).populate(populateOptions);
 
     if (existingLeave) {
-      const lastLeave = existingLeave.leaves;
-      return res.json(lastLeave);
+      if (dataType === "Pending") {
+        if (existingLeave.length > 0) {
+          const pendingLeaves = existingLeave.map((doc) => {
+            return {
+              username: doc.employeeId.username,
+              email: doc.employeeId.email,
+              leaves: doc.leaves.filter((leave) => leave.status === "Pending"),
+            };
+          });
+          return res.json(pendingLeaves);
+        } else {
+          return res.json(existingLeave);
+        }
+      } else {
+        return res.json(existingLeave);
+      }
     } else {
       return res.json(false);
     }
+    // if (dataType === "Pending") {
+    //   let existingLeave = await Leave.find({
+    //     "leaves.status": "Pending",
+    //   }).populate(populateOptions);
+
+    //   if (existingLeave && existingLeave.length > 0) {
+    //     const pendingLeaves = existingLeave.map((doc) => {
+    //       return {
+    //         username: doc.employeeId.username,
+    //         email: doc.employeeId.email,
+    //         leaves: doc.leaves.filter((leave) => leave.status === "Pending"),
+    //       };
+    //     });
+    //     return res.json(pendingLeaves);
+    //   } else {
+    //     return res.json(false);
+    //   }
+    // } else if (dataType === "All") {
+    //   let existingLeave = await Leave.find({}).populate(populateOptions);
+    //   if (existingLeave) {
+    //     return res.json(existingLeave);
+    //   } else {
+    //     return res.json(false);
+    //   }
+    // } else if (dataType === "Specific") {
+    //   let exisitingLeave = await Leave.findOne({ employeeId }).populate(
+    //     populateOptions
+    //   );
+    //   if (exisitingLeave) {
+    //     return res.json(exisitingLeave);
+    //   } else {
+    //     return res.json(false);
+    //   }
+    // }
   } catch (error) {
     next(error);
   }
