@@ -1,20 +1,28 @@
 import Leave from "../models/Leaves.model.js";
+import moment from "moment";
 
 import { errorHandler } from "../utils/error.js";
 
 export async function applyLeave(req, res, next) {
   try {
+    console.log(req.body);
     const {
       employeeId,
       type,
-      fromDate,
-      toDate,
+      fromCalendar: fromDate,
+      toCalendar: toDate,
       duration,
       comment,
-      numberDays,
     } = req.body;
 
     const status = "Pending";
+
+    const date1 = new Date(fromDate);
+    const date2 = new Date(toDate);
+
+    const timeDifference = date2 - date1;
+
+    const numberDays = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
 
     const leaveReq = {
       type,
@@ -56,6 +64,7 @@ export async function applyLeave(req, res, next) {
 export async function getLeave(req, res, next) {
   try {
     const { employeeId, dataType } = req.body;
+
     let populateOptions = {
       path: "employeeId",
       select: "username email",
@@ -68,6 +77,11 @@ export async function getLeave(req, res, next) {
       query = { employeeId };
     } else if (dataType === "All") {
       query = {};
+    } else {
+      return res.json({
+        success: false,
+        status: "type of return not sepecified",
+      });
     }
 
     let existingLeave = await Leave.find(query).populate(populateOptions);

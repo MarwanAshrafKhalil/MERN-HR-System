@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { useFormik } from "formik";
 import Calendar from "react-calendar";
@@ -7,11 +7,19 @@ import "react-calendar/dist/Calendar.css";
 import { CalendarMonth } from "@mui/icons-material";
 import { basicSchema } from "../schemas/schema";
 
+import { useDispatch, useSelector } from "react-redux";
+import { applyLeave } from "../redux/features/leaves/leaves.actions";
+import moment from "moment";
+
 function Leaves() {
+  const dispatch = useDispatch();
+  const employeeId = useSelector((state) => state.employee.currentEmployee._id);
   const [dateInputs, setDateInputs] = useState([
     { id: "fromCalendar", isOpen: false },
     { id: "toCalendar", isOpen: false },
   ]);
+
+  const [formError, setFormError] = useState("");
 
   const handleDateChange = (id, date) => {
     console.log(date);
@@ -20,7 +28,10 @@ function Leaves() {
       return prevInputs.map((input) => {
         if (input.id === id) {
           handleChange({
-            target: { name: input.id, value: date },
+            target: {
+              name: input.id,
+              value: moment(date).format("L"),
+            },
           });
           return { ...input, isOpen: false };
         } else {
@@ -44,11 +55,26 @@ function Leaves() {
     console.log(dateInputs);
   };
 
+  const validateDate = (values) => {
+    const fromDate = new Date(values.fromCalendar);
+    const toDate = new Date(values.toCalendar);
+
+    if (toDate < fromDate) {
+      setFormError("To Date could not be before the From Date");
+      return false;
+    } else return true;
+  };
+
   const onSubmit = async (values, actions) => {
-    console.log("submitted");
-    console.log(values);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    actions.resetForm();
+    if (validateDate(values)) {
+      const data = { employeeId, ...values };
+
+      dispatch(applyLeave(data));
+      console.log(values);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      actions.resetForm();
+      setFormError("");
+    }
   };
 
   const {
@@ -69,10 +95,11 @@ function Leaves() {
     validationSchema: basicSchema,
     onSubmit,
   });
-  console.log(values);
+  // console.log(values);
   // console.log(errors);
 
   const leaveTypeOptions = ["", "Annual", "Casual"];
+  const durationOptions = ["", "Full Day", "Half Day"];
 
   return (
     <div className="flex flex-col m-10 pb-5  max-w-lg mx-auto ">
@@ -104,42 +131,6 @@ function Leaves() {
           </select>
         </div>
 
-        {/* {dateInputs.map((input) => (
-          <div key={input.id} className="formLine">
-            <label htmlFor={input.id} className=" formLabel">
-              {input.id === "fromCalendar" ? "From Date" : "To Date"}
-            </label>
-            <input
-              id={`${input.id}`}
-              className="inputData "
-              type="text"
-              name={input.id}
-              required
-              placeholder="yyyy-mm-dd"
-              value={values[`${input.id}`]} ////hereee
-              readOnly
-              onChange={handleChange}
-              onBlur={handleBlur}
-            />
-            <button
-              id={input.id}
-              type="button"
-              className="calendar-button"
-              onClick={handleButtonClick}
-            >
-              <CalendarMonth id={input.id} />
-            </button>
-            {input.isOpen && (
-              <div>
-                <Calendar
-                  className="absolute inset-x-auto "
-                  onChange={(date) => handleDateChange(input.id, date)}
-                />
-              </div>
-            )}
-          </div>
-        ))} */}
-
         {dateInputs.map((input) => (
           <CalendarInput
             key={input.id}
@@ -152,12 +143,10 @@ function Leaves() {
             handleBlur={handleBlur}
           />
         ))}
-
         <div id="duration" className="formLine">
           <label htmlFor="duration" className=" formLabel">
             Duration
           </label>
-
           <select
             id="duration"
             className="inputData"
@@ -166,17 +155,17 @@ function Leaves() {
             onChange={handleChange}
             onBlur={handleBlur}
           >
-            <option value="">--Select--</option>
-            <option value="HalfDay">Half Day</option>
-            <option value="FullDay">Full Day</option>
+            {durationOptions.map((option) => {
+              <option key={option} value={option}>
+                {option ? option : "--Select--"}
+              </option>;
+            })}
           </select>
         </div>
-
         <div id="comment" className="formLine">
           <label htmlFor="comment_Section" className=" formLabel">
             Comment
           </label>
-
           <input
             id="comment_Section"
             className="inputData"
@@ -189,6 +178,7 @@ function Leaves() {
           />
         </div>
 
+        {formError && formError}
         <button type="submit">Apply</button>
       </form>
     </div>
