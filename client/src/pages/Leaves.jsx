@@ -2,6 +2,7 @@ import React, { useState } from "react";
 
 import { useFormik } from "formik";
 import Calendar from "react-calendar";
+import CalendarInput from "../components/CalenderInput";
 import "react-calendar/dist/Calendar.css";
 import { CalendarMonth } from "@mui/icons-material";
 import { basicSchema } from "../schemas/schema";
@@ -68,8 +69,10 @@ function Leaves() {
     validationSchema: basicSchema,
     onSubmit,
   });
-  // console.log(values);
+  console.log(values);
   // console.log(errors);
+
+  const leaveTypeOptions = ["", "Annual", "Casual"];
 
   return (
     <div className="flex flex-col m-10 pb-5  max-w-lg mx-auto ">
@@ -84,6 +87,7 @@ function Leaves() {
           <label htmlFor="leaveType" className=" formLabel">
             Leave Type
           </label>
+
           <select
             id="leave_type"
             className="inputData"
@@ -92,13 +96,15 @@ function Leaves() {
             onChange={handleChange}
             onBlur={handleBlur}
           >
-            <option value="">--Select--</option>
-            <option value="Annual">Annual</option>
-            <option value="Casual">Casual</option>
+            {leaveTypeOptions.map((option) => (
+              <option key={option} value={option}>
+                {option ? option : "--Select--"}
+              </option>
+            ))}
           </select>
         </div>
 
-        {dateInputs.map((input) => (
+        {/* {dateInputs.map((input) => (
           <div key={input.id} className="formLine">
             <label htmlFor={input.id} className=" formLabel">
               {input.id === "fromCalendar" ? "From Date" : "To Date"}
@@ -132,6 +138,19 @@ function Leaves() {
               </div>
             )}
           </div>
+        ))} */}
+
+        {dateInputs.map((input) => (
+          <CalendarInput
+            key={input.id}
+            id={input.id}
+            value={values[input.id]}
+            onClick={handleButtonClick}
+            isOpen={input.isOpen}
+            onDateChange={handleDateChange}
+            handleChange={handleChange}
+            handleBlur={handleBlur}
+          />
         ))}
 
         <div id="duration" className="formLine">
